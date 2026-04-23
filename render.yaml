@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: net-doctor
+    runtime: static
+    buildCommand: yarn install && yarn build
+    staticPublishPath: ./build
+    pullRequestPreviewsEnabled: true
+    envVars:
+      - key: CI
+        value: "false"
+      - key: NODE_VERSION
+        value: 20.11.0
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /static/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
